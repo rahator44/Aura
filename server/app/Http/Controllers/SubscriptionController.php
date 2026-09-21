@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
 use App\Models\Subscription;
 use App\Models\User;
+use App\Models\Notification;
 use App\Mail\AdminSubscriptionVerify;
 use App\Mail\UserSubscriptionResult;
 
@@ -55,6 +56,18 @@ class SubscriptionController extends Controller
             $adminEmail = env('ADMIN_EMAIL', 'rahator44@gmail.com');
             Mail::to($adminEmail)->send(new AdminSubscriptionVerify($subscription, $user, $acceptUrl, $rejectUrl));
 
+            // Notify Admins
+            $admins = \App\Models\User::where('role', 'admin')->get();
+            foreach ($admins as $admin) {
+                if ($user && $admin->id === $user->id) continue;
+                \App\Models\Notification::create([
+                    'user_id' => $admin->id,
+                    'title'   => '🔔 New Subscription Request',
+                    'message' => 'A new premium subscription request has been submitted by ' . $user->name,
+                    'type'    => 'info',
+                ]);
+            }
+
             return response()->json([
                 'success' => true,
                 'message' => 'Verification submitted! You will receive an email once an admin approves it.',
@@ -88,6 +101,13 @@ class SubscriptionController extends Controller
         $user->is_subscribed = true;
         $user->save();
 
+        Notification::create([
+            'user_id' => $user->id,
+            'title'   => '🎉 Subscription Approved!',
+            'message' => 'Congratulations! Your Aura++ Premium subscription has been approved. You now have full access to all premium features.',
+            'type'    => 'success',
+        ]);
+
         // Notify user
         Mail::to($user->email)->send(new UserSubscriptionResult($user, true));
 
@@ -110,6 +130,13 @@ class SubscriptionController extends Controller
         $subscription->save();
 
         $user = User::findOrFail($subscription->user_id);
+
+        Notification::create([
+            'user_id' => $user->id,
+            'title'   => '❌ Subscription Rejected',
+            'message' => 'Unfortunately, your Aura++ subscription request has been rejected. Please double-check your transaction ID and try again.',
+            'type'    => 'danger',
+        ]);
         
         // Notify user
         Mail::to($user->email)->send(new UserSubscriptionResult($user, false));
