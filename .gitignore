@@ -1,0 +1,42 @@
+# Laravel standard ignores
+/server/vendor/
+/server/node_modules/
+/server/public/storage
+/server/storage/*.key
+/server/storage/framework/cache/data/*
+/server/storage/framework/sessions/*
+/server/storage/framework/testing/*
+/server/storage/framework/views/*
+/server/.env
+/server/.phpunit.result.cache
+/server/Homestead.json
+/server/Homestead.yaml
+/server/auth.json
+/server/npm-debug.log
+/server/yarn-error.log
+/server/.pnpm-debug.log
+/server/android/
+/server/ios/
+/server/nbproject/
+
+# React/Vite standard ignores (client)
+/client/node_modules/
+/client/dist/
+/client/build/
+/client/.env
+/client/.env.local
+/client/.env.development.local
+/client/.env.test.local
+/client/.env.production.local
+/client/npm-debug.log*
+/client/yarn-debug.log*
+/client/yarn-error.log*
+/client/pnpm-debug.log*
+
+# Root level
+.env
+.project
+.DS_Store
+Thumbs.db
+node_modules/
+vendor/

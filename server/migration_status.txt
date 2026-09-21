@@ -1,0 +1,63 @@
+
+Warning: Module "curl" is already loaded in Unknown on line 0
+
+Warning: Module "fileinfo" is already loaded in Unknown on line 0
+
+Warning: Module "mbstring" is already loaded in Unknown on line 0
+
+Warning: Module "openssl" is already loaded in Unknown on line 0
+
+Warning: Module "pdo_sqlite" is already loaded in Unknown on line 0
+
+Warning: Module "sqlite3" is already loaded in Unknown on line 0
+
+Warning: Module "openssl" is already loaded in Unknown on line 0
+
+Warning: Module "curl" is already loaded in Unknown on line 0
+
+Warning: Module "mbstring" is already loaded in Unknown on line 0
+
+Deprecated: optional(): Implicitly marking parameter $callback as nullable is deprecated, the explicit nullable type must be used instead in E:\AURAsd\server\vendor\laravel\framework\src\Illuminate\Support\helpers.php on line 184
+
+Deprecated: with(): Implicitly marking parameter $callback as nullable is deprecated, the explicit nullable type must be used instead in E:\AURAsd\server\vendor\laravel\framework\src\Illuminate\Support\helpers.php on line 375
+
+Deprecated: Illuminate\Container\Container::beforeResolving(): Implicitly marking parameter $callback as nullable is deprecated, the explicit nullable type must be used instead in E:\AURAsd\server\vendor\laravel\framework\src\Illuminate\Container\Container.php on line 1114
+
+Deprecated: Illuminate\Container\Container::resolving(): Implicitly marking parameter $callback as nullable is deprecated, the explicit nullable type must be used instead in E:\AURAsd\server\vendor\laravel\framework\src\Illuminate\Container\Container.php on line 1134
+
+Deprecated: Illuminate\Container\Container::afterResolving(): Implicitly marking parameter $callback as nullable is deprecated, the explicit nullable type must be used instead in E:\AURAsd\server\vendor\laravel\framework\src\Illuminate\Container\Container.php on line 1154
+
+Deprecated: Illuminate\Container\Container::setInstance(): Implicitly marking parameter $container as nullable is deprecated, the explicit nullable type must be used instead in E:\AURAsd\server\vendor\laravel\framework\src\Illuminate\Container\Container.php on line 1393
+
+Deprecated: Illuminate\Contracts\Container\Container::resolving(): Implicitly marking parameter $callback as nullable is deprecated, the explicit nullable type must be used instead in E:\AURAsd\server\vendor\laravel\framework\src\Illuminate\Contracts\Container\Container.php on line 173
+
+Deprecated: Illuminate\Contracts\Container\Container::afterResolving(): Implicitly marking parameter $callback as nullable is deprecated, the explicit nullable type must be used instead in E:\AURAsd\server\vendor\laravel\framework\src\Illuminate\Contracts\Container\Container.php on line 182
+
+Deprecated: Illuminate\Support\Arr::first(): Implicitly marking parameter $callback as nullable is deprecated, the explicit nullable type must be used instead in E:\AURAsd\server\vendor\laravel\framework\src\Illuminate\Collections\Arr.php on line 183
+
+Deprecated: Illuminate\Support\Arr::last(): Implicitly marking parameter $callback as nullable is deprecated, the explicit nullable type must be used instead in E:\AURAsd\server\vendor\laravel\framework\src\Illuminate\Collections\Arr.php on line 212
+
+Deprecated: Illuminate\Events\Dispatcher::__construct(): Implicitly marking parameter $container as nullable is deprecated, the explicit nullable type must be used instead in E:\AURAsd\server\vendor\laravel\framework\src\Illuminate\Events\Dispatcher.php on line 65
+
+Deprecated: Illuminate\Support\Str::createUuidsUsing(): Implicitly marking parameter $factory as nullable is deprecated, the explicit nullable type must be used instead in E:\AURAsd\server\vendor\laravel\framework\src\Illuminate\Support\Str.php on line 1007
+
+Deprecated: voku\helper\ASCII::to_ascii(): Implicitly marking parameter $replace_single_chars_only as nullable is deprecated, the explicit nullable type must be used instead in E:\AURAsd\server\vendor\voku\portable-ascii\src\voku\helper\ASCII.php on line 830
++------+------------------------------------------------------------+-------+
+| Ran? | Migration                                                  | Batch |
++------+------------------------------------------------------------+-------+
+| Yes  | 2019_12_14_000001_create_personal_access_tokens_table      | 1     |
+| Yes  | 2024_01_01_000001_create_users_table                       | 1     |
+| Yes  | 2024_01_01_000002_add_social_fields_to_users_table         | 1     |
+| Yes  | 2024_01_01_000003_create_password_reset_tokens_table       | 1     |
+| Yes  | 2024_01_01_000004_auth_improvements                        | 1     |
+| Yes  | 2024_01_01_000005_create_events_table                      | 1     |
+| Yes  | 2024_01_01_000006_create_bookings_table                    | 1     |
+| Yes  | 2024_01_01_000007_create_reviews_table                     | 4     |
+| Yes  | 2026_03_01_174052_add_payment_fields_to_bookings_table     | 2     |
+| Yes  | 2026_03_01_175936_change_image_column_type_in_events_table | 3     |
+| Yes  | 2026_03_23_055234_add_details_to_events_table              | 4     |
+| Yes  | 2026_03_24_000000_create_subscriptions_table               | 4     |
+| Yes  | 2026_03_24_000001_add_is_subscribed_to_users_table         | 5     |
+| No   | 2026_04_02_162216_add_fields_to_events_table               |       |
+| No   | 2026_04_03_174401_add_user_id_to_events_table              |       |
++------+------------------------------------------------------------+-------+

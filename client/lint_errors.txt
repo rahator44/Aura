@@ -1,0 +1,53 @@
+
+> client@0.0.0 lint
+> eslint .
+
+
+E:\sdpro\Aura-\client\src\api.ts
+   31:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   51:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   93:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  111:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  121:29  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  125:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  136:22  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  157:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  167:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  177:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  187:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  199:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  205:24  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  209:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  215:26  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  219:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  229:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\sdpro\Aura-\client\src\components\BookingModal.tsx
+   3:41  error  'FiUsers' is defined but never used  @typescript-eslint/no-unused-vars
+  89:18  error  'error' is defined but never used    @typescript-eslint/no-unused-vars
+
+E:\sdpro\Aura-\client\src\context\AuthContext.tsx
+  55:14  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+E:\sdpro\Aura-\client\src\helpers\util.ts
+  6:7  error  'classEndTimeMs' is never reassigned. Use 'const' instead  prefer-const
+
+E:\sdpro\Aura-\client\src\views\AdminDashboard.tsx
+  64:23  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\sdpro\Aura-\client\src\views\Events.tsx
+  29:8   warning  React Hook useEffect has a missing dependency: 'fetchEvents'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  39:18  error    'error' is defined but never used                                                                               @typescript-eslint/no-unused-vars
+
+E:\sdpro\Aura-\client\src\views\ForgotPassword.tsx
+  34:18  error  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+E:\sdpro\Aura-\client\src\views\Login.tsx
+  31:18  error  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+E:\sdpro\Aura-\client\src\views\ResetPassword.tsx
+  41:18  error  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+Γ£û 27 problems (25 errors, 2 warnings)
+  1 error and 0 warnings potentially fixable with the `--fix` option.
+

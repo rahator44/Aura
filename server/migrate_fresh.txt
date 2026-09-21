@@ -1,0 +1,21 @@
+Dropped all tables successfully.
+Migration table created successfully.
+Migrating: 2019_12_14_000001_create_personal_access_tokens_table
+Migrated:  2019_12_14_000001_create_personal_access_tokens_table (16.42ms)
+Migrating: 2024_01_01_000001_create_users_table
+Migrated:  2024_01_01_000001_create_users_table (19.96ms)
+Migrating: 2024_01_01_000002_add_social_fields_to_users_table
+Migrated:  2024_01_01_000002_add_social_fields_to_users_table (0.21ms)
+Migrating: 2024_01_01_000003_create_password_reset_tokens_table
+Migrated:  2024_01_01_000003_create_password_reset_tokens_table (13.81ms)
+Migrating: 2024_01_01_000004_auth_improvements
+Migrated:  2024_01_01_000004_auth_improvements (36.85ms)
+Migrating: 2024_01_01_000005_create_events_table
+Migrated:  2024_01_01_000005_create_events_table (5.37ms)
+Migrating: 2024_01_01_000006_create_bookings_table
+Migrated:  2024_01_01_000006_create_bookings_table (19.29ms)
+Migrating: 2024_01_01_000007_create_sessions_table
+Migrated:  2024_01_01_000007_create_sessions_table (7.66ms)
+Seeding: Database\Seeders\EventSeeder
+Seeded:  Database\Seeders\EventSeeder (67.08ms)
+Database seeding completed successfully.
