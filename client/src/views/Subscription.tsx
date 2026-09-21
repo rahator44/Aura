@@ -13,7 +13,7 @@ const Subscription: React.FC = () => {
     const [isFlipped, setIsFlipped] = useState(false);
     const navigate = useNavigate();
     const api = React.useMemo(() => new ApiClient(), []);
-    const { user } = useAuth();
+    const { user, isAdmin, refreshUser } = useAuth();
     const [events, setEvents] = useState<any[]>([]);
     const [subscriberStats, setSubscriberStats] = useState<{ total_subscribers: number, recent_subscribers: any[] } | null>(null);
     const [myBookings, setMyBookings] = useState<any[]>([]);
@@ -22,6 +22,7 @@ const Subscription: React.FC = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [bookingCount, setBookingCount] = useState(0);
     const [transactionId, setTransactionId] = useState('');
+    const [creatorTicketsSold, setCreatorTicketsSold] = useState(0);
     
     // Review State
     const [rating, setRating] = useState(5);
@@ -36,6 +37,13 @@ const Subscription: React.FC = () => {
             setEmail(user.email);
         }
     }, [user]);
+
+    useEffect(() => {
+        // Refresh user status on component mount to catch recent subscription approvals
+        if (user && refreshUser) {
+            refreshUser();
+        }
+    }, []);
 
     const getMotivationalTheme = (id: number) => {
         const uniqueThemes = [
@@ -96,10 +104,19 @@ const Subscription: React.FC = () => {
                 setSubscriberStats(response);
             }
         };
+        const fetchCreatorStats = async () => {
+            if (user?.is_subscribed || isAdmin) {
+                const response = await api.getCreatorStats();
+                if (response.success) {
+                    setCreatorTicketsSold(response.tickets_sold || 0);
+                }
+            }
+        };
 
         fetchEvents();
         fetchStats();
-    }, [api]);
+        fetchCreatorStats();
+    }, [api, user]);
 
     useEffect(() => {
         fetchMyBookings(bookingPage);
@@ -232,7 +249,7 @@ const Subscription: React.FC = () => {
                 </Col>
 
                 {/* Right: 3D Flip Card Subscription Form - Hidden if already subscribed */}
-                {!user?.is_subscribed && (
+                {!(user?.is_subscribed || isAdmin) && (
                     <Col lg={4} md={6}>
                     <div className={`flip-card ${isFlipped ? 'flipped' : ''}`}>
                         <div className="flip-card-inner">
@@ -350,7 +367,7 @@ const Subscription: React.FC = () => {
             </Row>
 
             {/* Subscriber Details Section (3D Inspired) */}
-            {user?.is_subscribed && (
+            {(user?.is_subscribed || isAdmin) && (
                 <Row className="justify-content-center mt-5 pt-5 animate-fade-in-up">
                     <Col lg={10}>
                         <div className="text-center mb-5">
@@ -364,7 +381,7 @@ const Subscription: React.FC = () => {
                         </div>
                         
                         <Row className="g-4 mb-5">
-                            <Col md={4}>
+                            <Col md={3}>
                                 <div className="stats-card p-4 text-center">
                                     <h5 className="text-muted mb-2 text-uppercase ls-1">Tickets Bought</h5>
                                     <h1 className="fw-bolder text-danger display-4">
@@ -372,7 +389,15 @@ const Subscription: React.FC = () => {
                                     </h1>
                                 </div>
                             </Col>
-                            <Col md={4}>
+                            <Col md={3}>
+                                <div className="stats-card p-4 text-center">
+                                    <h5 className="text-muted mb-2 text-uppercase ls-1">Tickets Sold</h5>
+                                    <h1 className="fw-bolder text-info display-4">
+                                        {creatorTicketsSold}
+                                    </h1>
+                                </div>
+                            </Col>
+                            <Col md={3}>
                                 <div className="stats-card p-4 text-center">
                                     <h5 className="text-muted mb-2 text-uppercase ls-1">Events Attended</h5>
                                     <h1 className="fw-bolder text-white display-4">
@@ -380,7 +405,7 @@ const Subscription: React.FC = () => {
                                     </h1>
                                 </div>
                             </Col>
-                            <Col md={4}>
+                            <Col md={3}>
                                 <div className="stats-card p-4 text-center">
                                     <h5 className="text-muted mb-2 text-uppercase ls-1">Membership</h5>
                                     {bookingCount >= 2 ? (
@@ -436,7 +461,14 @@ const Subscription: React.FC = () => {
                                                 <td className="ps-4 py-3 fw-bold">{booking.event?.title || 'Unknown Event'}</td>
                                                 <td>{booking.quantity}</td>
                                                 <td className="text-danger fw-bold">{booking.total_price} TK</td>
-                                                <td><Badge bg="success" className="opacity-75">{booking.status}</Badge></td>
+                                                <td>
+                                                    <Badge 
+                                                        bg={booking.status === 'confirmed' ? 'success' : (booking.status === 'pending' ? 'warning' : 'danger')} 
+                                                        className="opacity-75"
+                                                    >
+                                                        {booking.status}
+                                                    </Badge>
+                                                </td>
                                                 <td className="text-muted small">{new Date(booking.created_at).toLocaleDateString()}</td>
                                             </tr>
                                         )) : (
@@ -482,7 +514,7 @@ const Subscription: React.FC = () => {
             )}
 
             {/* Global Public Stats Footer */}
-            {subscriberStats && !user?.is_subscribed && (
+            {subscriberStats && !(user?.is_subscribed || isAdmin) && (
                 <Row className="justify-content-center mt-5 pt-4 border-top border-secondary border-opacity-10">
                     <Col lg={6} className="text-center">
                         <h6 className="text-white fw-bold d-flex align-items-center justify-content-center mb-3">

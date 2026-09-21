@@ -48,7 +48,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ show, onHide, event, isMemb
         try {
             const response = await api.bookTicket(bookingData);
             if (response.success) {
-                toast.success('Booking Successful!');
+                toast.success(response.message || 'Booking Successful!');
                 onHide();
             } else {
                 toast.error(response.message || 'Payment Failed');

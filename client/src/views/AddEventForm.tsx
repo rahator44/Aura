@@ -18,6 +18,7 @@ const AddEventForm: React.FC = () => {
         price: '',
         capacity: '',
         category: 'Concert',
+        city_country: '',
         image: ''
     });
 
@@ -140,6 +141,21 @@ const AddEventForm: React.FC = () => {
                                                     name="date"
                                                     type="datetime-local"
                                                     className="input-glass"
+                                                    onChange={handleChange}
+                                                    required
+                                                />
+                                            </Form.Group>
+                                        </Col>
+                                    </Row>
+
+                                    <Row>
+                                        <Col md={12}>
+                                            <Form.Group className="mb-3">
+                                                <Form.Label className="text-white opacity-75">City & Country</Form.Label>
+                                                <Form.Control
+                                                    name="city_country"
+                                                    className="input-glass"
+                                                    placeholder="Dhaka, Bangladesh"
                                                     onChange={handleChange}
                                                     required
                                                 />

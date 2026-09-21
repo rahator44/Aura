@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Card, Button, Container, Badge, Modal, Pagination } from 'react-bootstrap';
-import { FiMapPin, FiCalendar, FiClock, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { Row, Col, Card, Button, Container, Badge, Modal, Pagination, Form, Dropdown } from 'react-bootstrap';
+import { FiMapPin, FiCalendar, FiClock, FiChevronLeft, FiChevronRight, FiSearch, FiFilter } from 'react-icons/fi';
 import ApiClient from '../api';
 import PaymentModal from '../components/PaymentModal';
 import toast from 'react-hot-toast';
@@ -28,16 +28,20 @@ const Events: React.FC = () => {
     const [lastPage, setLastPage] = useState(1);
     const [bookingCount, setBookingCount] = useState(0);
     const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [categoryFilter, setCategoryFilter] = useState('');
+    const [locationFilter, setLocationFilter] = useState('');
+    const [categories, setCategories] = useState<string[]>([]);
     const [showBookingModal, setShowBookingModal] = useState(false);
     const [showDetailsModal, setShowDetailsModal] = useState(false);
     const { user, isAdmin } = useAuth();
     const navigate = useNavigate();
     const api = React.useMemo(() => new ApiClient(), []);
 
-    const fetchEvents = React.useCallback(async (page: number = 1) => {
+    const fetchEvents = React.useCallback(async (page: number = 1, search: string = '', category: string = '', location: string = '') => {
         setLoading(true);
         try {
-            const response = await api.getEvents(page);
+            const response = await api.getEvents(page, search, category, location);
             if (response.success) {
                 setEvents(response.events || []);
                 if (response.pagination) {
@@ -55,7 +59,19 @@ const Events: React.FC = () => {
     }, [api]);
 
     useEffect(() => {
-        fetchEvents(currentPage);
+        const timer = setTimeout(() => {
+            fetchEvents(currentPage, searchQuery, categoryFilter, locationFilter);
+        }, 300);
+        return () => clearTimeout(timer);
+    }, [searchQuery, categoryFilter, locationFilter, currentPage, fetchEvents]);
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            const res = await api.getEventCategories();
+            if (res.success && res.categories) setCategories(res.categories);
+        };
+        fetchCategories();
+        
         const fetchMyBookings = async () => {
             if (user) {
                 const response = await api.getMyBookings();
@@ -65,7 +81,7 @@ const Events: React.FC = () => {
             }
         };
         fetchMyBookings();
-    }, [fetchEvents, api, user, currentPage]);
+    }, [api, user]);
 
     const DigitalClock = () => {
         const [time, setTime] = React.useState(new Date());
@@ -108,15 +124,7 @@ const Events: React.FC = () => {
         setShowBookingModal(true);
     };
 
-    if (loading) {
-        return (
-            <Container className="py-5 text-center">
-                <div className="spinner-border text-danger" role="status">
-                    <span className="visually-hidden">Loading...</span>
-                </div>
-            </Container>
-        );
-    }
+
 
     return (
         <div className="events-page py-5">
@@ -162,8 +170,64 @@ const Events: React.FC = () => {
                     </div>
                 </div>
 
+                <div className="search-filter-section mb-5">
+                    <Row className="justify-content-center">
+                        <Col md={10} lg={8}>
+                            <div className="d-flex flex-column flex-md-row gap-3 align-items-center">
+                                <div className="position-relative flex-grow-1 w-100">
+                                    <FiSearch className="position-absolute text-danger fs-4" style={{ top: '50%', left: '25px', transform: 'translateY(-50%)', zIndex: 10 }} />
+                                    <Form.Control 
+                                        type="text" 
+                                        placeholder="Search events by name..." 
+                                        value={searchQuery}
+                                        onChange={(e) => { setCurrentPage(1); setSearchQuery(e.target.value); }}
+                                        className="text-white border-secondary shadow-lg rounded-pill py-3 px-5 w-100"
+                                        style={{ paddingLeft: '65px', fontSize: '1.1rem', backgroundColor: '#1a1a1a' }}
+                                    />
+                                </div>
+                                
+                                <Dropdown>
+                                    <Dropdown.Toggle variant="dark" id="dropdown-filter" className="border-secondary rounded-3 py-3 px-4 fw-bold d-flex align-items-center gap-2 shadow-lg text-white" style={{ fontSize: '1.05rem', backgroundColor: '#1a1a1a', border: '1px solid #333' }}>
+                                        <FiFilter className="text-muted" /> {categoryFilter || 'Add filter'}
+                                    </Dropdown.Toggle>
+
+                                    <Dropdown.Menu variant="dark" className="shadow-lg border-secondary rounded-3 p-2" style={{ minWidth: '220px', backgroundColor: '#16161a' }}>
+                                        <Dropdown.Item 
+                                            active={categoryFilter === ''}
+                                            onClick={() => { setCurrentPage(1); setCategoryFilter(''); }}
+                                            className="rounded-2 py-2 mb-1"
+                                            style={{ opacity: 0.9 }}
+                                        >
+                                            All Categories
+                                        </Dropdown.Item>
+                                        <Dropdown.Divider className="border-secondary opacity-25" />
+                                        {categories.map(cat => (
+                                            <Dropdown.Item 
+                                                key={cat}
+                                                active={categoryFilter === cat}
+                                                onClick={() => { setCurrentPage(1); setCategoryFilter(cat); }}
+                                                className="rounded-2 py-2 mb-1 fw-medium"
+                                                style={{ transition: 'all 0.2s' }}
+                                            >
+                                                {cat}
+                                            </Dropdown.Item>
+                                        ))}
+                                    </Dropdown.Menu>
+                                </Dropdown>
+                            </div>
+                        </Col>
+                    </Row>
+                </div>
+
                 <Row className="g-4">
-                    {events.length > 0 ? (
+                    {loading ? (
+                        <Col className="text-center py-5">
+                            <div className="spinner-border text-danger" role="status" style={{ width: '3rem', height: '3rem' }}>
+                                <span className="visually-hidden">Loading...</span>
+                            </div>
+                            <h5 className="text-muted mt-3">Searching Events...</h5>
+                        </Col>
+                    ) : events.length > 0 ? (
                         events.map((event) => (
                             <Col key={event.id} lg={4} md={6}>
                                 <Card
