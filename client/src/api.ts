@@ -174,6 +174,16 @@ class ApiClient {
     }
   }
 
+  async getAdminAnomalies() {
+    try {
+      const response = await this.client.get('/api/admin/anomalies');
+      return { success: true, data: response.data.anomalies };
+    } catch (error: any) {
+      console.error(error);
+      return { success: false, message: 'Failed to fetch anomalies' };
+    }
+  }
+
   async acceptSubscription(id: number) {
     try {
       const response = await this.client.post(`/api/admin/subscriptions/${id}/accept`);
@@ -226,9 +236,24 @@ class ApiClient {
 
   // --- Event & Booking Methods ---
 
-  async getEvents(page: number = 1) {
+  async getEventCategories() {
     try {
-      const response = await this.client.get(`/api/events?page=${page}`);
+      const response = await this.client.get('/api/events/categories');
+      return { success: true, categories: response.data.categories };
+    } catch (error: any) {
+      console.error(error);
+      return { success: false, categories: [] };
+    }
+  }
+
+  async getEvents(page: number = 1, search: string = '', category: string = '', location: string = '') {
+    try {
+      const queryParams = new URLSearchParams({ page: page.toString() });
+      if (search) queryParams.append('search', search);
+      if (category) queryParams.append('category', category);
+      if (location) queryParams.append('location', location);
+      
+      const response = await this.client.get(`/api/events?${queryParams.toString()}`);
       return { 
         success: true, 
         events: response.data.events.data,
@@ -265,6 +290,36 @@ class ApiClient {
     }
   }
 
+  async acceptBooking(id: number) {
+    try {
+      const response = await this.client.post(`/api/admin/bookings/${id}/accept`);
+      return { success: true, message: response.data.message };
+    } catch (error: any) {
+      console.error(error);
+      return { success: false, message: error.response?.data?.message || 'Failed to accept booking' };
+    }
+  }
+
+  async rejectBooking(id: number) {
+    try {
+      const response = await this.client.post(`/api/admin/bookings/${id}/reject`);
+      return { success: true, message: response.data.message };
+    } catch (error: any) {
+      console.error(error);
+      return { success: false, message: error.response?.data?.message || 'Failed to reject booking' };
+    }
+  }
+
+  async getCreatorStats() {
+    try {
+      const response = await this.client.get('/api/creator-stats');
+      return { success: true, tickets_sold: response.data.tickets_sold };
+    } catch (error: any) {
+      console.error(error);
+      return { success: false, message: error.response?.data?.message || 'Failed to fetch creator stats' };
+    }
+  }
+
   async subscribe(data: any) {
     try {
       const response = await this.client.post('/api/subscribe', data);
@@ -290,6 +345,16 @@ class ApiClient {
     } catch (error: any) {
       console.error(error);
       return { success: false, message: 'Failed to fetch bookings' };
+    }
+  }
+
+  async getUser() {
+    try {
+      const response = await this.client.get('/api/user');
+      return { success: true, user: response.data };
+    } catch (error: any) {
+      console.error(error);
+      return { success: false };
     }
   }
 

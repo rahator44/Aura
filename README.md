@@ -1,158 +1,135 @@
-AURA++ Simplify Events, Amplify Experiences with AURA++
-Team Members
-| Maliha Pervin | 20230104077 | parvinmaliha26@gmail.com | Frontend| | Ohidur Rahman Rifat | 20230104090 | rifator44@gmail.com | Lead, Backend | | Hisham Mhamhud | 20230104096 | hishammd123545@gmail.com | Backend, Frontend |
+# AURA++ 🚀
+> **Simplify Events, Amplify Experiences**
 
-Project Overview
-AURA++ is a dynamic event management platform that simplifies the process of organizing, booking, and managing events. The platform is designed to streamline attendee registration, event scheduling, and ticket booking, providing a seamless experience for both event organizers and participants.
-
-Key Features
-Attendee Registration
-Simple sign-up and registration process.
-Automated email confirmations upon successful registration.
-Schedule Management
-Easily create and manage event schedules.
-Real-time ticket updates to keep participants informed about event changes.
-Admin Panel
-Efficient tools for organizing, overseeing, and modifying event details.
-Manage attendee data, bookings, and event performance insights.
-Target Audience
-AURA++ is designed for a wide range of users:
-
-Event Organizers: Simplifying event planning, registration handling, and ticket management.
-Businesses & Organizations: Perfect for conferences, workshops, corporate events, and more.
-Attendees: Providing an easy-to-use platform for exploring and registering for events.
-Event Planners & Agencies: Scalable solutions to manage multiple events simultaneously.
-Figma Design
-https://www.figma.com/make/H8CHBf3n7KZBXLgskA3p3W/Ticket-Booking-Website?p=f&t=PwngXGLQgkqlc01w-0
-
-Project Milestones
-Checkpoint 1
-Design landing pages and dashboard UI using Figma.
-Implement home page frontend.
-Implement events page frontend.
-Checkpoint 2
-Develop user authentication (registration & login) for both frontend and backend.
-Implement the "About Us" page frontend.
-Checkpoint 3
-Develop backend booking functionality.
-Finalize UI/UX design with responsive capabilities.
-Integrate frontend with backend.
-Deploy the web application.
-Usage Instructions
-Prerequisites
-Before getting started, ensure the following tools are installed:
-
-PHP (for the backend)
-Composer (for managing PHP dependencies)
-Node.js (for running the React frontend)
-XAMPP (for running the MySQL database and backend server)
-Installation Steps
-Clone the repository.
-
-Install necessary dependencies:
-
-For React Frontend: ```bash npm install npm install axios npm install coreui npm install dayjs npm install moment ```
-For Laravel Backend: ```bash composer install composer require fruitcake/laravel-cors ```
-Install Laravel Installer globally: ```bash composer global require laravel/installer ```
-
-Configure your .env file for both frontend and backend.
-
-Run the following Laravel commands: ```bash php artisan storage:link php artisan vendor:publish php artisan install:api ```
-
-Start the development servers:
-
-React Frontend: ```bash npm run dev ```
-Laravel Backend: ```bash php artisan serve ```
-Ensure your XAMPP server is running with the MySQL database configured.
-
-Accessing the Platform
-Once both frontend and backend are running, access the platform via the provided local address.
-
-Admin Features:
-
-Create and modify event schedules.
-Oversee attendee data and bookings.
-User Features:
-
-Register for events.
-Book tickets for events. EOF
-4. Stage and commit the file
-git add README.md git commit -m "Initial commit: AURA++ Project Proposal"
-
-82. Connect and push to GitHub (Replace with your actual repo link)
-git branch -M main git remote add origin <YOUR_GITHUB_REPO_URL> git push -u origin main
+AURA++ is a state-of-the-art, dynamic event management and ticket booking platform. Designed to streamline attendee registration, event scheduling, and real-time ticketing, AURA++ pairs a sleek, modern UI/UX with a robust backend architecture and integrated Machine Learning for real-time Zero-Trust Behavior Anomaly Detection.
 
 ---
 
-## Behavior Anomaly Detection (ML Component)
-AURA++ includes a small-scale, Zero Trust User Behavior Anomaly Detection system. It logs user activities (like logins, event creation, ticket bookings), extracts behavioral features, and uses a scikit-learn Isolation Forest model (served via FastAPI) to detect anomalies in real-time.
+## 👥 Team Members
 
-### Complete Flow
-1. **User action**: A user performs a sensitive action (e.g., login, booking).
-2. **Laravel activity log**: The action is logged to the `user_activity_logs` table.
-3. **Behavioral features**: The system aggregates the user's history into numeric features (e.g., `login_attempts`, `tickets_booked`).
-4. **CSV/training data**: An artisan command exports this data for training.
-5. **Isolation Forest**: A Python script trains the anomaly detection model.
-6. **Anomaly prediction**: The FastAPI service predicts if the behavior is an anomaly based on the features.
-7. **Laravel Zero Trust**: The backend stores the prediction in `behavior_anomaly_results`. If the behavior is flagged as anomalous, Laravel immediately invokes a Zero Trust response: it soft-deletes the user account and revokes all active JSON Web Tokens (JWT), instantly blocking the user.
-8. **Admin display**: The React admin dashboard displays the flagged behavior in the "Behavior Anomalies" tab.
+| Name | Student ID | Email | Project Role |
+| :--- | :---: | :--- | :--- |
+| **Maliha Pervin** | 20230104077 | `parvinmaliha26@gmail.com` | **Frontend Lead** |
+| **Ohidur Rahman Rifat** | 20230104090 | `rifator44@gmail.com` | **Project Lead & Backend** |
+| **Hisham Mhamhud** | 20230104096 | `hishammd123545@gmail.com` | **Full Stack Developer** |
 
-### Setup Instructions
+---
 
-#### 1. ML Environment Setup
-Navigate to the root directory and set up the Python environment:
+## ✨ Key Features
+
+### 🎨 Frontend & UI/UX (Led by Maliha Pervin)
+- **Modern Responsive Design**: Dynamic layouts crafted with high-fidelity glassmorphism elements, custom micro-animations, and fluid transitions.
+- **Event Discovery & Filtering**: Search and filter upcoming events by category, date, and availability.
+- **Seamless Ticket Booking**: Interactive modal workflows with instant seat reservation and bKash payment verification integration.
+- **Interactive Navbar & Notifications**: Real-time notification bell displaying unread updates, subscription alerts, and status changes.
+- **Admin Dashboard**: Comprehensive admin control panel for event creation, attendee management, and security oversight.
+
+### ⚙️ Backend & API Architecture
+- **Laravel 10 REST API**: Clean controller-driven API managing users, events, subscriptions, and ticket bookings.
+- **Authentication & Security**: Secure JWT authentication, password hashing, and role-based access control (RBAC).
+- **Automated Email System**: Instant email receipts and verification alerts (`UserBookingResult`, `AdminBookingVerify`).
+
+### 🛡️ Machine Learning & Zero-Trust Anomaly Detection
+- **Isolation Forest Model**: Real-time behavioral feature evaluation using Scikit-Learn.
+- **FastAPI Microservice**: High-performance Python API running on Port 8002 for live prediction.
+- **Automated Threat Response**: Flags anomalous activity (e.g., suspicious booking/login rates) and triggers instant session revocation and soft-deletion in Laravel.
+
+---
+
+## 🛠️ Technology Stack
+
+| Domain | Technologies Used |
+| :--- | :--- |
+| **Frontend** | React 18, TypeScript, Vite, CoreUI, DayJS, Axios |
+| **Backend** | PHP 8.1+, Laravel 10, MySQL (XAMPP) |
+| **Machine Learning** | Python 3.10, FastAPI, Scikit-Learn, Pandas, Uvicorn |
+| **Design & Prototyping** | Figma, Vanilla CSS, Custom Micro-animations |
+
+---
+
+## 🎯 Target Audience
+
+- **Event Organizers**: Effortless event creation, schedule management, and attendee tracking.
+- **Attendees & Participants**: Intuitive platform to discover, book, and verify tickets.
+- **Businesses & Agencies**: Scalable multi-event management solution for conferences, workshops, and corporate events.
+
+---
+
+## 🔗 Design Assets
+
+🎨 **[Figma Interactive Prototype](https://www.figma.com/make/H8CHBf3n7KZBXLgskA3p3W/Ticket-Booking-Website?p=f&t=PwngXGLQgkqlc01w-0)**
+
+---
+
+## 📌 Project Milestones
+
+- [x] **Checkpoint 1**: Figma wireframing, frontend landing pages, events overview UI, and design system setup.
+- [x] **Checkpoint 2**: Frontend & backend user authentication (JWT), About Us page, and API integration.
+- [x] **Checkpoint 3**: Backend booking engine, bKash transaction confirmation flow, responsive polish, and ML Zero-Trust anomaly engine integration.
+
+---
+
+## 🚀 Installation & Setup Guide
+
+### 1. Prerequisites
+Ensure you have the following installed on your environment:
+- **Node.js** (v18+) & **npm**
+- **PHP** (v8.1+) & **Composer**
+- **XAMPP** (MySQL Database Server)
+- **Python** (v3.10+)
+
+---
+
+### 2. Frontend Setup (React + Vite)
+
 ```bash
-python3 -m venv ml/.venv
-source ml/.venv/bin/activate
-pip install -r ml/requirements.txt
+cd client
+npm install
+npm run dev
 ```
+*Frontend local address: `http://localhost:5173`*
 
-#### 2. Training the Model
-You can train the model on AURA++ generated data, or use an external dataset (for testing/learning):
+---
 
-**Export AURA++ behavior data:**
+### 3. Backend Setup (Laravel REST API)
+
 ```bash
 cd server
-php artisan ml:export-behavior
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan storage:link
+php artisan migrate --seed
+php artisan serve
 ```
-*Note: This generates `data/behavior.csv` based on your local database.*
+*Backend local address: `http://127.0.0.1:8000`*
 
-**Train the model:**
+---
+
+### 4. Machine Learning API Setup (Behavior Anomaly Service)
+
 ```bash
-cd ml
-# To train on the AURA++ exported data:
+# Set up Python virtual environment
+python3 -m venv ml/.venv
+source ml/.venv/bin/activate    # On Windows: ml\.venv\Scripts\activate
+pip install -r ml/requirements.txt
+
+# Export behavior data & train model
+cd server
+php artisan ml:export-behavior
+cd ../ml
 python train.py ../data/behavior.csv
 
-# To train on the Kaggle external dataset (User Behaviour Dataset):
-python train.py --external
-```
-
-#### 3. Starting the ML API
-The ML API must be running for AURA++ to evaluate predictions dynamically. To avoid port conflicts with Laravel, the ML API is configured to run on Port 8002.
-```bash
-cd ml
-source .venv/bin/activate
+# Launch FastAPI Microservice on Port 8002
 uvicorn app:app --host 127.0.0.1 --port 8002
 ```
 
-#### 4. Starting AURA++ Services
-Open separate terminals for the Frontend, Backend, and ML API.
+---
 
-1. **MySQL / XAMPP**: Ensure your MySQL server is running via XAMPP. If on Kali/Ubuntu, ensure you stop the default system database first (`sudo service mysql stop`) and start XAMPP (`sudo /opt/lampp/lampp startmysql`).
-2. **Laravel Backend**: Start this *before* the ML API to ensure it safely grabs Port 8000.
-```bash
-cd server
-php artisan serve
-```
-3. **React Frontend**:
-```bash
-cd client
-npm run dev
-```
-4. **ML API**: Start this on Port 8002. (See step 3 above)
+## 🧪 Testing ML Anomaly Prediction
 
-#### 5. Testing a Prediction Directly
-You can manually test the FastAPI prediction endpoint using `curl`:
+Test the prediction endpoint directly via `curl`:
+
 ```bash
 curl -X POST http://127.0.0.1:8002/predict \
 -H "Content-Type: application/json" \
@@ -169,3 +146,9 @@ curl -X POST http://127.0.0.1:8002/predict \
   "requests_per_minute": 0.8
 }'
 ```
+
+---
+
+## 📝 License & Group Project Guidelines
+
+This repository is maintained by the **AURA++ Group Team**. All pushes to remote branches (including **`Noon`**) follow strict version control guidelines without force pushing (`--force` prohibited) to preserve team contributions and commit history.

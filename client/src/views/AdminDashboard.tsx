@@ -60,6 +60,15 @@ interface SubscriptionData {
     user?: User;
 }
 
+interface Anomaly {
+    id: number;
+    user_id: number;
+    user?: User;
+    anomaly: string;
+    anomaly_score: number;
+    created_at: string;
+}
+
 const AdminDashboard: React.FC = () => {
     console.log("[ADMIN] Mounting AdminDashboard...");
     const [stats, setStats] = useState<Stats | null>(null);
@@ -67,7 +76,8 @@ const AdminDashboard: React.FC = () => {
     const [events, setEvents] = useState<Event[]>([]);
     const [bookings, setBookings] = useState<Booking[]>([]);
     const [subscriptions, setSubscriptions] = useState<SubscriptionData[]>([]);
-    const [activeTab, setActiveTab] = useState<'users' | 'events' | 'tickets' | 'subscriptions'>('users');
+    const [anomalies, setAnomalies] = useState<Anomaly[]>([]);
+    const [activeTab, setActiveTab] = useState<'users' | 'events' | 'tickets' | 'subscriptions' | 'anomalies'>('users');
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
     const [showAddEventModal, setShowAddEventModal] = useState(false);
@@ -135,15 +145,19 @@ const AdminDashboard: React.FC = () => {
             setRefreshing(false);
         }
 
-        // Fetch subscriptions separately so it never blocks other data
         try {
             const subsRes = await api.getAdminSubscriptions();
             console.log("[ADMIN] Subs Response:", subsRes);
             if (subsRes.success) {
                 setSubscriptions((subsRes as any).subscriptions || []);
             }
+
+            const anomalyRes = await api.getAdminAnomalies();
+            if (anomalyRes.success) {
+                setAnomalies((anomalyRes as any).data || []);
+            }
         } catch (err: any) {
-            console.error("[ADMIN] Subscriptions fetch error:", err);
+            console.error("[ADMIN] Extra data fetch error:", err);
         }
     };
 
@@ -186,6 +200,30 @@ const AdminDashboard: React.FC = () => {
             const res = await api.rejectSubscription(id);
             if (res.success) {
                 toast.success(res.message);
+                fetchDashboardData(true);
+            } else {
+                toast.error(res.message);
+            }
+        }
+    };
+
+    const handleAcceptBooking = async (id: number) => {
+        if (window.confirm('Are you sure you want to approve this booking? An email will be sent to the user immediately.')) {
+            const res = await api.acceptBooking(id);
+            if (res.success) {
+                toast.success(res.message);
+                fetchDashboardData(true);
+            } else {
+                toast.error(res.message);
+            }
+        }
+    };
+
+    const handleRejectBooking = async (id: number) => {
+        if (window.confirm('Are you sure you want to reject this booking? An email will be sent to the user.')) {
+            const res = await api.rejectBooking(id);
+            if (res.success) {
+                toast.success(res.message || 'Booking rejected');
                 fetchDashboardData(true);
             } else {
                 toast.error(res.message);
@@ -280,13 +318,23 @@ const AdminDashboard: React.FC = () => {
                         </Card.Body>
                     </Card>
                 </Col>
-                <Col md={3} onClick={() => setActiveTab('subscriptions')} style={{ cursor: 'pointer' }}>
+                <Col md={2} onClick={() => setActiveTab('subscriptions')} style={{ cursor: 'pointer' }}>
                     <Card className={`h-100 bg-dark text-white shadow-sm ${activeTab === 'subscriptions' ? 'border-info' : 'border-secondary'}`}>
                         <Card.Body className="d-flex align-items-center p-3">
                             <div className="bg-info p-2 rounded-3 me-3 text-dark">
                                 <FaUserShield size={20} />
                             </div>
-                            <h6 className="mb-0 fw-bold text-info">Subscriptions: {subscriptions.length}</h6>
+                            <h6 className="mb-0 fw-bold text-info">Subs: {subscriptions.length}</h6>
+                        </Card.Body>
+                    </Card>
+                </Col>
+                <Col md={2} onClick={() => setActiveTab('anomalies')} style={{ cursor: 'pointer' }}>
+                    <Card className={`h-100 bg-dark text-white shadow-sm ${activeTab === 'anomalies' ? 'border-danger' : 'border-secondary'}`}>
+                        <Card.Body className="d-flex align-items-center p-3">
+                            <div className="bg-danger p-2 rounded-3 me-3 text-white">
+                                <FaUserShield size={20} />
+                            </div>
+                            <h6 className="mb-0 fw-bold text-danger">Anomalies: {anomalies.length}</h6>
                         </Card.Body>
                     </Card>
                 </Col>
@@ -296,7 +344,7 @@ const AdminDashboard: React.FC = () => {
             <Card className="bg-dark text-white border-secondary shadow-sm">
                 <Card.Header className="bg-transparent border-secondary py-3">
                     <h5 className="mb-0 fw-bold">
-                        {activeTab === 'users' ? 'User Management' : activeTab === 'events' ? 'Event Details' : activeTab === 'subscriptions' ? 'Subscription Requests' : 'Ticket Sales (Bookings)'}
+                        {activeTab === 'users' ? 'User Management' : activeTab === 'events' ? 'Event Details' : activeTab === 'subscriptions' ? 'Subscription Requests' : activeTab === 'anomalies' ? 'Behavior Anomalies' : 'Ticket Sales (Bookings)'}
                     </h5>
                 </Card.Header>
                 <Card.Body className="p-0">
@@ -429,6 +477,7 @@ const AdminDashboard: React.FC = () => {
                                         <th>Qty</th>
                                         <th>Status</th>
                                         <th>Purchase Date</th>
+                                        <th className="text-center">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -450,6 +499,19 @@ const AdminDashboard: React.FC = () => {
                                             </td>
                                             <td className="text-muted">
                                                 <small>{new Date(booking.created_at).toLocaleDateString()}</small>
+                                            </td>
+                                            <td className="text-center pe-4">
+                                                {booking.status === 'pending' && (
+                                                    <div className="d-flex justify-content-center gap-2">
+                                                        <Button variant="outline-success" size="sm" onClick={() => handleAcceptBooking(booking.id)}>
+                                                            Accept
+                                                        </Button>
+                                                        <Button variant="outline-danger" size="sm" onClick={() => handleRejectBooking(booking.id)}>
+                                                            Reject
+                                                        </Button>
+                                                    </div>
+                                                )}
+                                                {booking.status !== 'pending' && <span className="text-muted small">Processed</span>}
                                             </td>
                                         </tr>
                                     ))}
@@ -510,6 +572,42 @@ const AdminDashboard: React.FC = () => {
                                     {subscriptions.length === 0 && (
                                         <tr>
                                             <td colSpan={7} className="text-center py-4 text-muted">No subscription requests</td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </>
+                        )}
+
+                        {activeTab === 'anomalies' && (
+                            <>
+                                <thead className="bg-secondary bg-opacity-10 text-muted">
+                                    <tr>
+                                        <th className="ps-4">ID</th>
+                                        <th>User Name</th>
+                                        <th>Date/Time</th>
+                                        <th>Status</th>
+                                        <th>Anomaly Score</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {anomalies?.map((anomaly) => (
+                                        <tr key={anomaly.id} className="align-middle border-secondary border-opacity-25">
+                                            <td className="ps-4 fw-bold">#{anomaly.id}</td>
+                                            <td className="text-white">{anomaly.user?.name || 'Unknown'}</td>
+                                            <td className="text-muted"><small>{new Date(anomaly.created_at).toLocaleString()}</small></td>
+                                            <td>
+                                                <Badge bg={anomaly.anomaly === 'normal' ? 'success' : 'danger'}>
+                                                    {anomaly.anomaly.toUpperCase()}
+                                                </Badge>
+                                            </td>
+                                            <td className={anomaly.anomaly === 'normal' ? 'text-success' : 'text-danger'}>
+                                                {Number(anomaly.anomaly_score).toFixed(4)}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    {anomalies.length === 0 && (
+                                        <tr>
+                                            <td colSpan={5} className="text-center py-4 text-muted">No anomalies detected yet</td>
                                         </tr>
                                     )}
                                 </tbody>
